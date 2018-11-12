@@ -11,7 +11,7 @@ void setup()
 void loop()  
 {
    Serial.print('a');
-   delay(5000);
+   delay(100);
    Serial.print('s');
-   delay(5000);
+   delay(1000);
 }
