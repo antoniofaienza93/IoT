@@ -2,7 +2,7 @@
 Project of the Internet of Things course
 
 # How to install Xbee
-- Open Arduino IDE
+- Download and Open [Arduino IDE](https://www.arduino.cc/en/Main/OldSoftwareReleases)
 - Select Sketch
      - include Library
      - Search Xbee
