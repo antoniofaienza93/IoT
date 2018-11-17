@@ -1,24 +1,24 @@
 #include <XBee.h>
 
-int led = 13;
 XBee xbee = XBee();
+ZBRxResponse received_message = ZBRxResponse();
+XBeeAddress64 address = XBeeAddress64(0x0013A200, 0x4079A81F);
 
 void setup()  
 {
    Serial.begin(9600);
    xbee.setSerial(Serial);
-   pinMode( led, OUTPUT );
-   digitalWrite( led,LOW );
+   delay(10);
 }
  
 void loop()  
 {
-  if (Serial.available()) 
+  xbee.readPacket();
+
+  if(xbee.getResponse().isAvailable())
   {
-    byte rcvd = Serial.read();
- 
-    if (rcvd == 'a') digitalWrite(led,HIGH); 
-    if (rcvd == 's') digitalWrite(led,LOW);
-  } 
-  delay(300);
+    xbee.getResponse().getZBRxResponse(received_message);
+    ZBTxRequest message = ZBTxRequest(address, received_message.getFrameData(), received_message.getFrameDataLength());
+    xbee.send(message);
+  }
 }
