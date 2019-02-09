@@ -1,28 +1,38 @@
 #include <Ethernet.h>
-#include <WiFi.h>
+//#include <WiFi.h>
 #include <PubSubClient.h>
 #include <XBee.h>
+#include <SoftwareSerial.h>
 
+SoftwareSerial ESPserial(6, 7); // RX | TX
+
+/*
 #define mqtt_server "192.168.137.157"
 #define mqtt_port 1883
 #define wifi_ssid "SuriLaptop"
 #define wifi_pass "TutteCapre00"
-
+*/
 //XBee object with callbacks
 XBeeWithCallbacks xbee;
 
-//Ethernet mac address
-byte mac[] = {0x90, 0xA2, 0xDA, 0x0D, 0x28, 0x8F};
+//Ethernet configuration
+//byte mac[] = {0x90, 0xA2, 0xDA, 0x0D, 0x28, 0x8F};
+//byte ip[] = {192, 168, 164, 99};
 
-WiFiClient wifiCoordinatorClient;
-PubSubClient coordinator(wifiCoordinatorClient);
+WiFiClient tempClient;
+PubSubClient client(tempClient);
 
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 void receive(ZBRxResponse& rx, uintptr_t) 
 {
   int temperature = extractTemperature(rx);
-  coordinator.publish("temperature", temperature);
+  ESPserial.write(temperature);
+  /*
+  char str[2];
+  sprintf(str, "%d", temperature);
+  client.publish("temperature", str);
+  */
 }
 
 int extractTemperature(ZBRxResponse& rx)
@@ -40,10 +50,10 @@ unsigned concatenate(unsigned x, unsigned y)
         pow *= 10;
     return x * pow + y;        
 }
-
+/*
 void connect_to_ethernet()
 {
-  Ethernet.begin(mac);
+  Ethernet.begin(mac, ip);
   delay(1000);
    
   if (Ethernet.linkStatus() == LinkOFF) 
@@ -51,7 +61,8 @@ void connect_to_ethernet()
       Serial.println("Ethernet cable is not connected.");
   }
 }
-
+*/
+/*
 void connect_to_WiFi()
 {
   WiFi.begin(wifi_ssid, wifi_pass);
@@ -68,7 +79,8 @@ void connect_to_WiFi()
   Serial.print("WiFi connected! IP address: ");
   Serial.println(WiFi.localIP());
 }
-
+*/
+/*
 void connect_to_broker()
 {
   coordinator.setServer(mqtt_server, mqtt_port);
@@ -89,19 +101,21 @@ void connect_to_broker()
     }
   }
 }
-
+*/
 void setup()  
 {
   Serial.begin(9600);
   xbee.setSerial(Serial);
   xbee.onZBRxResponse(receive);
+  ESPserial.begin(115200);
   //connect_to_ethernet();
-  connect_to_WiFi();
-  connect_to_broker();
+  //connect_to_WiFi();
+  //connect_to_broker();
 }
  
 void loop()  
 {
   xbee.loop();
-  coordinator.loop();
+
+  //coordinator.loop();
 }

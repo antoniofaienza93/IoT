@@ -35,7 +35,7 @@ void loop()
    getTemperature();
    Serial.print("Measured temperature: ");
    Serial.println((char*)temperature);
-   message = ZBTxRequest(router_address, temperature, sizeof(temperature));
+   message = ZBTxRequest(coordinator_address, temperature, sizeof(temperature));
    Serial.println("Sending temperature...");
    xbee.send(message);
    

@@ -1,14 +1,7 @@
 #include <XBee.h>
-#include <dht11.h>
-
-#define DHT_PIN 7
-
 
 //XBee instance
 XBee xbee = XBee();
-
-//Temperature sensor instance
-dht11 sensor;
 
 //Coordinator address
 XBeeAddress64 coordinator_address = XBeeAddress64(0x0, 0x0);
